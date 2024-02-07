@@ -6,19 +6,19 @@ const settings: SettingsSchema = {
   },
   players: {
     saldo_inicial: 200.0,
-    valor_cada_aposta: 20.0,
+    valor_cada_aposta: 22.0,
   }
 };
 
-let jogadores: Jogador[] = [];
-
 export function GET(req: Request){
-  const partida = gerarPartida(settings)
+  let jogadores: Jogador[] = [];
 
+  const partida = gerarPartida(jogadores, settings)
+  
   return Response.json(partida);
 }
 
-function gerarPartida(settings: SettingsSchema) {
+function gerarPartida(jogadores: Jogador[], settings: SettingsSchema) {
 
   for (let i = 0; i < settings.game.quantidade_jogadores; i++) {
     jogadores.push({
@@ -29,6 +29,7 @@ function gerarPartida(settings: SettingsSchema) {
 
   let quantidade_pessoas_lucro = 0;
   let quantidade_pessoas_prejuizo = 0;
+  let total_apostado = settings.players.valor_cada_aposta * jogadores.length;
   let lucro_cassino = 0;
 
   for(let jogador of jogadores){
@@ -36,15 +37,20 @@ function gerarPartida(settings: SettingsSchema) {
 
     if (resultadoAposta){
       jogador.saldo += settings.players.valor_cada_aposta * 2;
+      quantidade_pessoas_lucro++;
     } else {
       jogador.saldo -= settings.players.valor_cada_aposta;
       lucro_cassino += settings.players.valor_cada_aposta;
+      quantidade_pessoas_prejuizo++
     }
 
-    console.log(`jogador[${jogador.index}]: ${jogador.saldo}`);
+    console.log(`jogador[${jogador.index}]: R$${jogador.saldo}`);
   }
 
-  console.log(`lucro cassino: ${lucro_cassino}`)
+  console.log(`total apostado: R$${total_apostado}`);
+  console.log(`lucro cassino: R$${lucro_cassino}`);
+  console.log(`pessoas no lucro: ${quantidade_pessoas_lucro}`);
+  console.log(`pessoas no prejuizo: ${quantidade_pessoas_prejuizo}`);
 
   return {
     status: 200,
@@ -52,6 +58,7 @@ function gerarPartida(settings: SettingsSchema) {
     data: {
       quantidade_pessoas_lucro,
       quantidade_pessoas_prejuizo,
+      total_apostado,
       lucro_cassino,
     },
   };
