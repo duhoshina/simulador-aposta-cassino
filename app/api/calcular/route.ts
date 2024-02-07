@@ -1,7 +1,10 @@
+import { gerarPartida } from "./services";
+import { Jogador, SettingsSchema } from "./interfaces";
+
 const settings: SettingsSchema = {
   game: {
     quantidade_maxima_partidas: 10,
-    quantidade_jogadores: 1500,
+    quantidade_jogadores: 10,
     chance_ganhar_jogo: 0.486,
   },
   players: {
@@ -51,36 +54,4 @@ export function GET(req: Request){
   }
   
   return Response.json(res);
-}
-
-function gerarPartida(jogadores: Jogador[], lucro_cassino: number, settings: SettingsSchema) {
-  for(let jogador of jogadores){
-    const resultadoAposta = Math.random() < settings.game.chance_ganhar_jogo;
-
-    if (resultadoAposta){
-      jogador.saldo += settings.players.valor_cada_aposta * 2;
-    } else {
-      jogador.saldo -= settings.players.valor_cada_aposta;
-      lucro_cassino += settings.players.valor_cada_aposta;
-    }
-  }
-
-  return lucro_cassino;
-}
-
-interface SettingsSchema {
-  game: {
-    quantidade_maxima_partidas: number,
-    quantidade_jogadores: number,
-    chance_ganhar_jogo: number,
-  },
-  players: {
-    saldo_inicial: number,
-    valor_cada_aposta: number,
-  }
-}
-
-interface Jogador {
-  index: number,
-  saldo: number,
 }
