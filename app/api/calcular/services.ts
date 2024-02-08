@@ -6,7 +6,9 @@ export function gerarPartida({
   total_apostado, 
   lucro_cassino,
   pessoas_lucro,
+  percentual_pessoas_lucro, 
   pessoas_prejuizo,
+  percentual_pessoas_prejuizo, 
 }: PartidaData, settings: SettingsSchema): PartidaData {
   let seed: number = 0;
 
@@ -34,8 +36,10 @@ export function gerarPartida({
   return { 
     quantidade_partidas,
     total_apostado,
-    pessoas_lucro, 
-    pessoas_prejuizo, 
+    pessoas_lucro,
+    percentual_pessoas_lucro, 
+    pessoas_prejuizo,
+    percentual_pessoas_prejuizo, 
     lucro_cassino, 
     jogadores,
   };

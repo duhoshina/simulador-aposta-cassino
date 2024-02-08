@@ -20,6 +20,8 @@ export interface PartidaData {
   total_apostado: number,
   lucro_cassino: number,
   pessoas_lucro: number,
+  percentual_pessoas_lucro: number,
   pessoas_prejuizo: number,
+  percentual_pessoas_prejuizo: number,
   jogadores: Jogador[],
 }
