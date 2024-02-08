@@ -1,56 +1,51 @@
 import { gerarPartida } from "./services";
-import { Jogador, SettingsSchema } from "./interfaces";
-
-const settings: SettingsSchema = {
-  game: {
-    quantidade_maxima_partidas: 10,
-    quantidade_jogadores: 10,
-    chance_ganhar_jogo: 0.486,
-  },
-  players: {
-    saldo_inicial: 1000.0,
-    valor_cada_aposta: 100.0,
-  }
-};
+import { PartidaData, SettingsSchema } from "./interfaces";
 
 export function GET(req: Request){
-  let jogadores: Jogador[] = [];
-  let lucro_cassino = 0;
+  const settings: SettingsSchema = {
+    game: {
+      quantidade_maxima_partidas: 10,
+      quantidade_jogadores: 1500,
+      chance_ganhar_jogo: 0.486,
+    },
+    players: {
+      saldo_inicial: 200.0,
+      valor_cada_aposta: 20.0,
+    }
+  };
+
+  let data: PartidaData = {
+    total_apostado: 0,
+    quantidade_partidas: 0,
+    lucro_cassino: 0,
+    pessoas_lucro: 0,
+    pessoas_prejuizo: 0,
+    jogadores: [],
+  };
 
   for(let i = 0; i < settings.game.quantidade_jogadores; i++){
-    jogadores.push({
+    data.jogadores.push({
       index: i,
       saldo: settings.players.saldo_inicial,
     });
   }
-
-  let quantidade_partidas = 0;
   
   for(let i = 0; i < settings.game.quantidade_maxima_partidas; i++){
-    lucro_cassino = gerarPartida(jogadores, lucro_cassino, settings);
-    quantidade_partidas++
+    data = gerarPartida(data, settings);
   }
 
-  let pessoas_lucro = 0;
-  let pessoas_prejuizo = 0;
-
-  for(const jogador of jogadores){
-    if(jogador.saldo > settings.players.saldo_inicial){
-      pessoas_lucro++
+  for(const jogador of data.jogadores) {
+    if(jogador.saldo > settings.players.saldo_inicial) {
+      data.pessoas_lucro++
     } else {
-      pessoas_prejuizo++
+      data.pessoas_prejuizo++
     }
   }
 
   const res = {
     status: 200,
     settings,
-    data: {
-      quantidade_partidas,
-      lucro_cassino,
-      pessoas_lucro,
-      pessoas_prejuizo,
-    }
+    data,
   }
   
   return Response.json(res);

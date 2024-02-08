@@ -1,16 +1,42 @@
-import { Jogador, SettingsSchema } from "./interfaces";
+import { PartidaData, SettingsSchema } from "./interfaces";
 
-export function gerarPartida(jogadores: Jogador[], lucro_cassino: number, settings: SettingsSchema) {
+export function gerarPartida({
+  jogadores,
+  quantidade_partidas, 
+  total_apostado, 
+  lucro_cassino,
+  pessoas_lucro,
+  pessoas_prejuizo,
+}: PartidaData, settings: SettingsSchema): PartidaData {
+  let seed: number = 0;
+
   for(let jogador of jogadores){
-    const resultadoAposta = Math.random() < settings.game.chance_ganhar_jogo;
+    seed = Math.random();
+
+    const resultadoAposta = seed < settings.game.chance_ganhar_jogo;
+    
+    jogador.saldo -= settings.players.valor_cada_aposta;
+
+    // console.log(`Jogador: ${jogador.index} | Saldo: ${jogador.saldo} | Seed: ${seed} | Chance de Ganhar: ${settings.game.chance_ganhar_jogo} | Resultado Aposta: ${resultadoAposta}`);
 
     if (resultadoAposta){
-      jogador.saldo += settings.players.valor_cada_aposta * 2;
+      jogador.saldo += (settings.players.valor_cada_aposta * 2);
+      lucro_cassino -= settings.players.valor_cada_aposta;
     } else {
-      jogador.saldo -= settings.players.valor_cada_aposta;
       lucro_cassino += settings.players.valor_cada_aposta;
     }
+
+    total_apostado += settings.players.valor_cada_aposta;
+
+    quantidade_partidas++;
   }
 
-  return lucro_cassino;
+  return { 
+    quantidade_partidas,
+    total_apostado,
+    pessoas_lucro, 
+    pessoas_prejuizo, 
+    lucro_cassino, 
+    jogadores,
+  };
 }

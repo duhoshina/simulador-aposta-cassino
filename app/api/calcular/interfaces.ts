@@ -14,3 +14,12 @@ export interface Jogador {
   index: number,
   saldo: number,
 }
+
+export interface PartidaData {
+  quantidade_partidas: number,
+  total_apostado: number,
+  lucro_cassino: number,
+  pessoas_lucro: number,
+  pessoas_prejuizo: number,
+  jogadores: Jogador[],
+}
