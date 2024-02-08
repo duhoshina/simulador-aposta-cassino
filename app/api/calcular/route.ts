@@ -1,4 +1,4 @@
-import { gerarPartida } from "./services";
+import { calcularPorcentagem, gerarPartida } from "./services";
 import { PartidaData, SettingsSchema } from "./interfaces";
 
 export function GET(req: Request){
@@ -44,8 +44,8 @@ export function GET(req: Request){
     }
   }
 
-  data.percentual_pessoas_lucro = parseFloat((data.pessoas_lucro / settings.game.quantidade_jogadores * 100).toFixed(1));
-  data.percentual_pessoas_prejuizo = parseFloat((data.pessoas_prejuizo / settings.game.quantidade_jogadores * 100).toFixed(1));
+  data.percentual_pessoas_lucro = calcularPorcentagem(data.pessoas_lucro, settings.game.quantidade_jogadores);
+  data.percentual_pessoas_prejuizo = calcularPorcentagem(data.pessoas_prejuizo, settings.game.quantidade_jogadores);
 
   const res = {
     status: 200,

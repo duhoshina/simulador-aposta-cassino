@@ -44,3 +44,7 @@ export function gerarPartida({
     jogadores,
   };
 }
+
+export function calcularPorcentagem(valor: number, total: number) {
+  return parseFloat((valor * 100 / total).toFixed(1));
+}
