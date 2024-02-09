@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import SideBar from "@/components/sidebar";
+import { ProviderNextUI } from "../providers/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,13 +18,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body className={`${inter.className} antialiased text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900`}>
-        <div className="absolute z-20 top-0 inset-x-0 flex justify-center overflow-hidden pointer-events-none" />
-        <div className="flex">
-          <SideBar />
-          {children}
-        </div>
-      </body>
+        <body className={`${inter.className} antialiased text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900`}>
+          <ProviderNextUI>
+            <div className="absolute z-20 top-0 inset-x-0 flex justify-center overflow-hidden pointer-events-none" />
+            <div className="flex">
+              <SideBar />
+              {children}
+            </div>
+          </ProviderNextUI>
+        </body>
     </html>
   );
 }
